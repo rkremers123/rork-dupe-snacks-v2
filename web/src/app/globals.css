@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+/* DupeSnacks brand theme — dark navy with teal + magenta accents. */
+:root {
+  --background: #14142b;
+  --surface: #1a1a2e;
+  --surface-2: #222244;
+  --foreground: #f5f5fa;
+  --muted: #9a9ab5;
+  --teal: #2dd4bf;
+  --magenta: #e91e8c;
+  --gold: #fbbf24;
+  --border: #2c2c4a;
+  --danger: #ef4444;
+  --success: #34d399;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-teal: var(--teal);
+  --color-magenta: var(--magenta);
+  --color-gold: var(--gold);
+  --color-border: var(--border);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  border-color: var(--border);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+}

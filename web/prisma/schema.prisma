@@ -1,0 +1,73 @@
+// DupeSnacks catalog schema.
+// Dev uses SQLite; production swaps `provider` to "postgresql" with a
+// Vercel Postgres DATABASE_URL. Fields below are kept Postgres-portable
+// (no SQLite-only features, allergens stored as a comma-separated string).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  slug      String    @unique
+  name      String
+  emoji     String?
+  blurb     String?
+  sortOrder Int       @default(0)
+  products  Product[]
+}
+
+model Product {
+  id                  Int                 @id @default(autoincrement())
+  slug                String              @unique
+  name                String
+  brand               String
+  description         String              @default("")
+  imageUrl            String              @default("")
+  amazonUrl           String              @default("")
+  asin                String?
+  price               Float?
+  rating              Float?
+  reviewCount         Int?
+  glutenFreeCertified Boolean             @default(false)
+  allergens           String              @default("") // comma-separated: soy,dairy,nuts,eggs,corn
+  // The mainstream snack this is a gluten-free "dupe" of (e.g. "Goldfish Crackers").
+  dupeOf              String?
+  dupeBrand           String?
+  featured            Boolean             @default(false)
+  popularity          Int                 @default(0)
+  categoryId          Int
+  category            Category            @relation(fields: [categoryId], references: [id])
+  collections         CollectionProduct[]
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+
+  @@index([categoryId])
+  @@index([dupeOf])
+}
+
+model Collection {
+  id          Int                 @id @default(autoincrement())
+  slug        String              @unique
+  name        String
+  description String?
+  emoji       String?
+  active      Boolean             @default(true)
+  sortOrder   Int                 @default(0)
+  products    CollectionProduct[]
+}
+
+model CollectionProduct {
+  collectionId Int
+  productId    Int
+  sortOrder    Int        @default(0)
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  product      Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([collectionId, productId])
+}
