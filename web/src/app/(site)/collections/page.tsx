@@ -8,6 +8,8 @@ export const metadata: Metadata = {
     "Curated gluten-free collections — holiday treats, game-day snacks, lunchbox favorites and more.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function CollectionsPage() {
   const collections = await getActiveCollections();
 

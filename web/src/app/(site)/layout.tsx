@@ -1,6 +1,9 @@
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
+// The header reads the live category list from the DB, so render per request.
+export const dynamic = "force-dynamic";
+
 export default function SiteLayout({
   children,
 }: {

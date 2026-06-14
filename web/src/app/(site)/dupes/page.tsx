@@ -8,6 +8,8 @@ export const metadata: Metadata = {
     "Every gluten-free dupe we've found — the celiac-safe version of popular snacks like Goldfish, Oreos, Cheez-Its and more.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function DupesPage() {
   const products = await getDupeProducts();
 

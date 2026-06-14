@@ -6,6 +6,10 @@ import {
 } from "@/lib/queries";
 import { ProductCard } from "@/components/ProductCard";
 
+// Catalog is DB-backed and admin-editable; render per request so changes
+// appear immediately and builds don't require a database connection.
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const [featured, categories, collections] = await Promise.all([
     getFeaturedProducts(8),

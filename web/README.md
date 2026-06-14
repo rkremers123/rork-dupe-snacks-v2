@@ -21,10 +21,15 @@ Affiliate ecommerce site for gluten-free "dupes" of popular snacks. Built with
 
 ## Local development
 
+The schema targets **Postgres** (the production database). For local dev you can
+either point `DATABASE_URL` at any Postgres instance, or — for the quickest
+start with no database to install — temporarily set the datasource `provider`
+in `prisma/schema.prisma` to `"sqlite"` and use `DATABASE_URL="file:./dev.db"`.
+
 ```bash
 npm install
 cp .env.example .env        # then edit values
-npm run db:push             # create the SQLite dev database
+npm run db:push             # create tables from the schema
 npm run db:seed             # load sample categories + dupes
 npm run dev
 ```
@@ -43,24 +48,31 @@ Visit http://localhost:3000. The admin lives at `/admin` (password from
 
 ## Deploying to Vercel + Vercel Postgres
 
-The app is developed against SQLite locally and is **Postgres-ready**. To go live:
+The schema already targets Postgres and `vercel.json` runs
+`prisma migrate deploy` during every build, so the database schema is created
+and kept in sync automatically. To go live:
 
-1. Push this repo to GitHub and import the `web/` directory as a Vercel project
-   (set the project root to `web`).
-2. Add a **Vercel Postgres** database to the project. Vercel injects
-   `DATABASE_URL` automatically.
-3. In `prisma/schema.prisma`, change the datasource provider from `sqlite` to
-   `postgresql` (the `url = env("DATABASE_URL")` line stays the same).
-4. Set the remaining env vars (`NEXT_PUBLIC_AMAZON_AFFILIATE_TAG`,
-   `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET`) in the Vercel dashboard.
-5. Run the initial schema push + seed against the production database:
+1. Push this repo to GitHub and **import the project into Vercel**, setting the
+   **Root Directory** to `web`.
+2. Add a **Vercel Postgres** database to the project (Storage → Create →
+   Postgres). Vercel injects `DATABASE_URL` automatically.
+3. Add the remaining environment variables in the Vercel dashboard:
+   - `NEXT_PUBLIC_AMAZON_AFFILIATE_TAG` = `dupesnacks-20`
+   - `ADMIN_PASSWORD` = a strong password
+   - `ADMIN_SESSION_SECRET` = a long random string
+4. Deploy. The build runs the migration and the tables are created.
+5. (Optional) Load the sample catalog once, from your machine with the
+   production `DATABASE_URL` exported:
 
    ```bash
-   npx prisma db push
-   npm run db:seed     # optional: load sample data
+   npm run db:seed
    ```
 
-6. Deploy, then point `dupesnacks.com` at the Vercel project.
+6. Add `dupesnacks.com` under the project's **Domains**.
+
+Schema changes later: edit `prisma/schema.prisma`, run
+`npx prisma migrate dev --name <change>` locally to create a migration, commit
+it, and the next deploy applies it automatically.
 
 ## Future: Amazon Product Advertising API
 

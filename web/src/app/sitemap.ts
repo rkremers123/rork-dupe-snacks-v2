@@ -3,6 +3,9 @@ import { prisma } from "@/lib/db";
 
 const BASE = "https://dupesnacks.com";
 
+// Generated from the live catalog at request time.
+export const dynamic = "force-dynamic";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [products, categories, collections] = await Promise.all([
     prisma.product.findMany({ select: { slug: true, updatedAt: true } }),
