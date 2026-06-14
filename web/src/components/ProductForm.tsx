@@ -67,12 +67,17 @@ export function ProductForm({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <label className={label}>
-          <span className="font-medium">Image URL</span>
-          <input name="imageUrl" defaultValue={product?.imageUrl} className={field} />
-        </label>
-        <label className={label}>
           <span className="font-medium">Amazon product URL</span>
-          <input name="amazonUrl" defaultValue={product?.amazonUrl} className={field} />
+          <input
+            name="amazonUrl"
+            defaultValue={product?.amazonUrl}
+            placeholder="https://www.amazon.com/dp/B0..."
+            className={field}
+          />
+          <span className="text-xs text-muted">
+            Paste the exact product page URL. We auto-extract the ASIN so the Buy
+            button links straight to this item (never a search).
+          </span>
         </label>
         <label className={label}>
           <span className="font-medium">ASIN (optional)</span>
@@ -82,6 +87,18 @@ export function ProductForm({
             placeholder="e.g. B07ABCD123"
             className={field}
           />
+          <span className="text-xs text-muted">
+            Leave blank if the URL above is a product page — we&apos;ll fill it
+            in. The ASIN also fetches a product image automatically.
+          </span>
+        </label>
+        <label className={label}>
+          <span className="font-medium">Image URL (optional)</span>
+          <input name="imageUrl" defaultValue={product?.imageUrl} className={field} />
+          <span className="text-xs text-muted">
+            Overrides the auto image. Right-click the Amazon product photo → Copy
+            image address.
+          </span>
         </label>
         <label className={label}>
           <span className="font-medium">Price (USD)</span>

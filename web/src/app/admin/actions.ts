@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { slugify } from "@/lib/catalog";
+import { extractAsin } from "@/lib/affiliate";
 import {
   checkPassword,
   createSession,
@@ -44,14 +45,19 @@ function readProductForm(formData: FormData) {
     .map((a) => String(a))
     .join(",");
 
+  const amazonUrl = str(formData.get("amazonUrl"));
+  // Prefer an explicit ASIN; otherwise pull it out of the pasted product URL so
+  // the Buy button always links to the exact product page.
+  const asin = extractAsin(str(formData.get("asin"))) ?? extractAsin(amazonUrl);
+
   return {
     name,
     slug: slugInput ? slugify(slugInput) : slugify(name),
     brand: str(formData.get("brand")),
     description: str(formData.get("description")),
     imageUrl: str(formData.get("imageUrl")),
-    amazonUrl: str(formData.get("amazonUrl")),
-    asin: str(formData.get("asin")) || null,
+    amazonUrl,
+    asin,
     price: num(formData.get("price")),
     rating: num(formData.get("rating")),
     reviewCount: num(formData.get("reviewCount"))

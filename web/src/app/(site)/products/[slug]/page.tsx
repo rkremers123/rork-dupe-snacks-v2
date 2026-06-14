@@ -4,7 +4,11 @@ import type { Metadata } from "next";
 import { prisma } from "@/lib/db";
 import { getProductBySlug } from "@/lib/queries";
 import { formatPrice } from "@/lib/catalog";
-import { amazonAffiliateUrl } from "@/lib/affiliate";
+import {
+  amazonAffiliateUrl,
+  productImage,
+  hasExactProductLink,
+} from "@/lib/affiliate";
 import { StarRating } from "@/components/StarRating";
 import { BuyButton } from "@/components/BuyButton";
 import { ProductCard } from "@/components/ProductCard";
@@ -32,6 +36,9 @@ export default async function ProductPage({ params }: { params: Params }) {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
   if (!product) notFound();
+
+  const image = productImage(product);
+  const exactLink = hasExactProductLink(product);
 
   const related = await prisma.product.findMany({
     where: { categoryId: product.categoryId, id: { not: product.id } },
@@ -88,17 +95,20 @@ export default async function ProductPage({ params }: { params: Params }) {
       </nav>
 
       <div className="grid gap-8 md:grid-cols-2">
-        <div className="overflow-hidden rounded-3xl border border-border bg-surface-2">
-          {product.imageUrl ? (
+        <div className="overflow-hidden rounded-3xl border border-border bg-white">
+          {image ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={product.imageUrl}
+              src={image}
               alt={product.name}
-              className="aspect-square w-full object-cover"
+              className="aspect-square w-full object-contain p-6"
             />
           ) : (
-            <div className="flex aspect-square items-center justify-center text-7xl">
-              🍪
+            <div className="flex aspect-square flex-col items-center justify-center gap-3 bg-gradient-to-br from-surface-2 to-surface">
+              <span className="text-7xl">{product.category.emoji ?? "🍪"}</span>
+              <span className="font-semibold text-foreground/70">
+                {product.brand}
+              </span>
             </div>
           )}
         </div>
@@ -145,6 +155,11 @@ export default async function ProductPage({ params }: { params: Params }) {
             size="lg"
             className="mt-2 w-full sm:w-auto"
           />
+          {exactLink ? (
+            <p className="text-xs text-teal">
+              ✓ Links directly to this exact product on Amazon.
+            </p>
+          ) : null}
           <p className="text-xs text-muted">
             As an Amazon Associate we earn from qualifying purchases.
           </p>

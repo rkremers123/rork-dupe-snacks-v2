@@ -15,10 +15,6 @@ const categories = [
   { slug: "pasta", name: "Pasta", emoji: "🍝", sortOrder: 10, blurb: "Gluten-free pasta that holds its bite." },
 ];
 
-function img(text: string) {
-  return `https://placehold.co/600x600/1a1a2e/2dd4bf?text=${encodeURIComponent(text)}`;
-}
-
 type Seed = {
   name: string;
   brand: string;
@@ -86,7 +82,9 @@ async function main() {
       name: p.name,
       brand: p.brand,
       description: p.description,
-      imageUrl: img(p.brand),
+      // Sample data has no real image/ASIN — the UI shows a designed fallback
+      // tile. Replace these with real products (paste the Amazon URL) in /admin.
+      imageUrl: "",
       amazonUrl: `https://www.amazon.com/s?k=${encodeURIComponent(p.brand + " " + p.name)}`,
       price: p.price,
       rating: p.rating,

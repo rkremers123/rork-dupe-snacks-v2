@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { requireAuth } from "@/lib/auth";
 import { formatPrice } from "@/lib/catalog";
+import { hasExactProductLink } from "@/lib/affiliate";
 import { deleteProductAction } from "./actions";
 
 export default async function AdminDashboard() {
@@ -64,7 +65,14 @@ export default async function AdminDashboard() {
                     )}
                     <div>
                       <div className="font-semibold">{p.name}</div>
-                      <div className="text-xs text-muted">{p.brand}</div>
+                      <div className="flex items-center gap-2 text-xs text-muted">
+                        {p.brand}
+                        {!hasExactProductLink(p) && (
+                          <span className="rounded bg-danger/15 px-1.5 py-0.5 font-medium text-danger">
+                            ⚠ search link — add ASIN/URL
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </td>
