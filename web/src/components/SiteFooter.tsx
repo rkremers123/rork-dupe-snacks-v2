@@ -28,6 +28,12 @@ export function SiteFooter() {
                 All products
               </Link>
             </div>
+            <div className="flex flex-col gap-2">
+              <span className="font-semibold text-foreground">Company</span>
+              <Link href="/about" className="hover:text-teal">
+                Our Story
+              </Link>
+            </div>
           </nav>
         </div>
         <p className="mt-8 text-xs text-muted/80">

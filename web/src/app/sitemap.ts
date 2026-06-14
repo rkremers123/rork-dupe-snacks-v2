@@ -16,7 +16,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }),
   ]);
 
-  const staticRoutes = ["", "/dupes", "/collections", "/search"].map((p) => ({
+  const staticRoutes = ["", "/dupes", "/collections", "/search", "/about"].map((p) => ({
     url: `${BASE}${p}`,
     changeFrequency: "weekly" as const,
     priority: p === "" ? 1 : 0.7,

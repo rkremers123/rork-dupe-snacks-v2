@@ -36,6 +36,9 @@ export async function SiteHeader() {
           <Link href="/collections" className="hover:text-teal">
             Collections
           </Link>
+          <Link href="/about" className="hover:text-teal">
+            Our Story
+          </Link>
         </nav>
       </div>
 
