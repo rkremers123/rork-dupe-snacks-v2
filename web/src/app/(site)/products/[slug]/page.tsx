@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/db";
 import { getProductBySlug } from "@/lib/queries";
-import { formatPrice } from "@/lib/catalog";
+import { formatPrice, slugify } from "@/lib/catalog";
 import {
   amazonAffiliateUrl,
   productImage,
@@ -120,16 +120,22 @@ export default async function ProductPage({ params }: { params: Params }) {
           <h1 className="text-3xl font-extrabold leading-tight">{product.name}</h1>
 
           {product.dupeOf && (
-            <div className="rounded-2xl border border-teal/30 bg-teal/10 p-4">
+            <Link
+              href={`/dupe/${slugify(product.dupeOf)}`}
+              className="block rounded-2xl border border-teal/30 bg-teal/10 p-4 transition hover:border-teal/60 hover:bg-teal/15"
+            >
               <p className="text-sm">
                 <span className="font-bold text-teal">Gluten-free dupe</span> for{" "}
                 <span className="font-semibold">
                   {product.dupeBrand ? `${product.dupeBrand} ` : ""}
                   {product.dupeOf}
                 </span>
-                . Same craving, celiac-safe.
+                . Same craving, celiac-safe.{" "}
+                <span className="font-semibold text-teal">
+                  See all {product.dupeOf} dupes →
+                </span>
               </p>
-            </div>
+            </Link>
           )}
 
           <StarRating

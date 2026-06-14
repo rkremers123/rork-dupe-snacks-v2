@@ -1,5 +1,55 @@
 import { prisma } from "@/lib/db";
-import { parseAllergens, sortProducts, type SortId } from "@/lib/catalog";
+import {
+  parseAllergens,
+  slugify,
+  sortProducts,
+  type SortId,
+} from "@/lib/catalog";
+import type { Category, Product } from "@prisma/client";
+
+type ProductCat = Product & { category: Category };
+
+export type DupeGroup = {
+  /** The mainstream snack, e.g. "Goldfish Crackers". */
+  name: string;
+  slug: string;
+  /** The original brand if known, e.g. "Pepperidge Farm". */
+  brand: string | null;
+  products: ProductCat[];
+};
+
+/** Group all dupe products by the mainstream snack they replace. */
+export async function getDupeGroups(): Promise<DupeGroup[]> {
+  const products = await prisma.product.findMany({
+    where: { dupeOf: { not: null } },
+    include: { category: true },
+    orderBy: { popularity: "desc" },
+  });
+
+  const groups = new Map<string, DupeGroup>();
+  for (const p of products) {
+    const name = p.dupeOf!.trim();
+    const slug = slugify(name);
+    if (!slug) continue;
+    const existing = groups.get(slug);
+    if (existing) {
+      existing.products.push(p);
+      if (!existing.brand && p.dupeBrand) existing.brand = p.dupeBrand;
+    } else {
+      groups.set(slug, { name, slug, brand: p.dupeBrand ?? null, products: [p] });
+    }
+  }
+  return [...groups.values()].sort(
+    (a, b) => b.products[0].popularity - a.products[0].popularity,
+  );
+}
+
+export async function getDupeGroupBySlug(
+  slug: string,
+): Promise<DupeGroup | null> {
+  const groups = await getDupeGroups();
+  return groups.find((g) => g.slug === slug) ?? null;
+}
 
 export type ProductWithCategory = Awaited<
   ReturnType<typeof getProductBySlug>

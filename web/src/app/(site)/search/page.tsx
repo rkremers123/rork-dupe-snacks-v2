@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { searchProducts, parseFilters } from "@/lib/queries";
 import { ProductGrid } from "@/components/ProductGrid";
-import { CatalogControls } from "@/components/CatalogControls";
+import { FilterSidebar } from "@/components/FilterSidebar";
 
 type Search = Promise<Record<string, string | string[] | undefined>>;
 
@@ -22,9 +22,9 @@ export default async function SearchPage({
   if (filters.q) hidden.q = filters.q;
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       <header>
-        <h1 className="text-2xl font-extrabold">
+        <h1 className="text-2xl font-extrabold md:text-3xl">
           {filters.q ? (
             <>
               Results for <span className="text-teal">“{filters.q}”</span>
@@ -36,18 +36,19 @@ export default async function SearchPage({
         <p className="mt-1 text-sm text-muted">{products.length} products</p>
       </header>
 
-      <CatalogControls
-        action="/search"
-        hidden={hidden}
-        current={{
-          sort: filters.sort,
-          allergenFree: filters.allergenFree,
-          certifiedOnly: filters.certifiedOnly,
-          maxPrice: filters.maxPrice?.toString(),
-        }}
-      />
-
-      <ProductGrid products={products} />
+      <div className="grid gap-6 md:grid-cols-[240px_1fr]">
+        <FilterSidebar
+          action="/search"
+          hidden={hidden}
+          current={{
+            sort: filters.sort,
+            allergenFree: filters.allergenFree,
+            certifiedOnly: filters.certifiedOnly,
+            maxPrice: filters.maxPrice?.toString(),
+          }}
+        />
+        <ProductGrid products={products} />
+      </div>
     </div>
   );
 }
