@@ -1,0 +1,3 @@
+name,brand,category,amazonUrl,asin,price,rating,reviewCount,description,dupeOf,dupeBrand,allergens,glutenFreeCertified,featured,imageUrl,popularity
+Cheddar Bunnies Baked Snack Crackers,Annie's,Crackers,PASTE_EXACT_AMAZON_PRODUCT_URL_HERE,,4.49,4.7,8200,Cheesy crunchy fish-shaped crackers made with real cheddar.,Goldfish Crackers,Pepperidge Farm,dairy,true,true,,100
+Original Chocolate Creme Cookies,Goodie Girl,Cookies,PASTE_EXACT_AMAZON_PRODUCT_URL_HERE,,4.99,4.6,6100,Chocolate wafers with a creamy vanilla filling.,Oreos,Nabisco,soy,true,false,,98

@@ -27,12 +27,20 @@ export default async function AdminDashboard() {
             {collectionCount} collections
           </p>
         </div>
-        <Link
-          href="/admin/products/new"
-          className="rounded-xl bg-magenta px-4 py-2.5 font-semibold text-white hover:brightness-110"
-        >
-          + New product
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/admin/import"
+            className="rounded-xl border border-teal px-4 py-2.5 font-semibold text-teal hover:bg-teal/10"
+          >
+            ⬆ Bulk import
+          </Link>
+          <Link
+            href="/admin/products/new"
+            className="rounded-xl bg-magenta px-4 py-2.5 font-semibold text-white hover:brightness-110"
+          >
+            + New product
+          </Link>
+        </div>
       </div>
 
       <div className="overflow-x-auto rounded-2xl border border-border">
