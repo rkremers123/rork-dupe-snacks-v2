@@ -14,9 +14,11 @@ function expectedToken() {
 }
 
 export function checkPassword(password: string): boolean {
-  const expected = process.env.ADMIN_PASSWORD || "";
+  // Trim to guard against a trailing newline/space accidentally saved in the
+  // ADMIN_PASSWORD env var (a common copy-paste issue in dashboards).
+  const expected = (process.env.ADMIN_PASSWORD || "").trim();
   if (!expected) return false;
-  const a = Buffer.from(password);
+  const a = Buffer.from(password.trim());
   const b = Buffer.from(expected);
   return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
